@@ -36,8 +36,8 @@ public class Salle {
         for (int k = 0; k < nbPlacesParRang; k++) {
             if (placesLibres[i][k] == true) {
                 count = count + 1;
-                System.out.println("i = " + i + " | k = "+k);
-                System.out.println("Count = "+count);
+//                System.out.println("i = " + i + " | k = "+k);
+//                System.out.println("Count = "+count);
                 if (count == n) return k - n + 1  ;
 
             } else count = 0;
@@ -59,7 +59,7 @@ public class Salle {
         return false;
     }
 
-    boolean reserver(int n) {
+    synchronized boolean reserver(int n) {
         System.out.println("====== Reserver "+ n + " places===========" );
         if (capaciteOK(n) == false) {
             System.out.println("Not enough place");
