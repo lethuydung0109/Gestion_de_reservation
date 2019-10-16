@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import java.util.ArrayList;
 
 public class Salle {
@@ -45,7 +47,7 @@ public class Salle {
         return -1;
     }
 
-    boolean reserverContigues(int n) {
+    synchronized boolean reserverContigues(int n) {
         for (int i = 0; i < nbRangs; i++) {
 //            System.out.println("nContinguesAuRang "+ nContiguesAuRangI(n,i));
             int nContinguesRangIIndex = nContiguesAuRangI(n, i);
@@ -57,6 +59,23 @@ public class Salle {
             }
         }
         return false;
+    }
+
+    synchronized ArrayList<Pair<Integer, Integer>> reserverContigues2(int n){
+        ArrayList<Pair<Integer, Integer>> listReserve = new ArrayList<Pair<Integer, Integer>>();
+
+        for (int i = 0; i < nbRangs; i++) {
+//            System.out.println("nContinguesAuRang "+ nContiguesAuRangI(n,i));
+            int nContinguesRangIIndex = nContiguesAuRangI(n, i);
+            if ( nContinguesRangIIndex!= -1) {
+                for (int k = nContinguesRangIIndex; k < nContinguesRangIIndex + n ; k++) {
+                    placesLibres[i][k] = false;
+                    listReserve.add(new Pair<>(i, k));
+                }
+                return listReserve;
+            }
+        }
+        return null;
     }
 
     synchronized boolean reserver(int n) {
@@ -86,6 +105,46 @@ public class Salle {
             }
         }
     }
+
+    synchronized ArrayList<Pair<Integer, Integer>> reserver2(int n){
+        ArrayList<Pair<Integer, Integer>> listReserve = new ArrayList<Pair<Integer, Integer>>();
+
+        System.out.println("====== Reserver "+ n + " places===========" );
+        if (capaciteOK(n) == false) {
+            System.out.println("Not enough place");
+            return null;
+        } else {
+            ArrayList<Pair<Integer, Integer>>  resConti = reserverContigues2(n);
+            if (resConti != null){
+                System.out.println("Reserve adjacent places");
+                listReserve.addAll(resConti);
+                return listReserve;
+            } else{
+                System.out.println("Reserve randomly");
+                int count = 0;
+                for (int i = 0; i < nbRangs; i++){
+                    for (int j = 0; j < nbPlacesParRang; j++){
+                        if (placesLibres[i][j] == true) {
+                            placesLibres[i][j] = false;
+                            listReserve.add(new Pair<>(i, j));
+                            count = count + 1;
+                        }
+                        if(count == n) return listReserve;
+                    }
+                }
+
+                return listReserve;
+            }
+        }
+    }
+
+    synchronized boolean annuler(ArrayList<Pair<Integer, Integer>> listReserve){
+        for (Pair<Integer, Integer> place : listReserve) {
+            placesLibres[place.getKey()][place.getValue()] = true;
+        }
+        return true;
+    }
+
 
     public String toString(){
         StringBuilder sb = new StringBuilder();

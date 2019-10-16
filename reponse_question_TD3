@@ -1,0 +1,15 @@
+- Question 2 :
+reserverContigue et reserver sont les deux methodes etant necessaire de garantir une exclusion mutuelle car
+elles sont des methodes d'ecriture, dans laquelle une ressource peut etre accede par plusieurs agents (threads).
+
+- Question 5 :
+
+** Il faut avoir une structure des donnees pour garder toutes les places reserves
+
+- Un tableau des paires (int, int) devrait etre utilise :
+ArrayList<Pair<Integer, Integer>>
+
+- Pour la fonction de reservation dans la classe Salle :
++ retourner un tableau des paires comme ci dessus pour les places reserves avec succes
++
+
